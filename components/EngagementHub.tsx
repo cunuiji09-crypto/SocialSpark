@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { TrendingUp, Search, Hash, MessageSquare, ListCheck, Copy } from 'lucide-react';
-import { generateEngagementTools } from '../services/gemini';
+import { generateEngagementTools } from '../services/gemini.ts';
 
 const EngagementHub: React.FC = () => {
   const [topic, setTopic] = useState('');
@@ -15,7 +15,8 @@ const EngagementHub: React.FC = () => {
       const data = await generateEngagementTools(topic);
       setResults(data);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao gerar ferramentas de engajamento:", error);
+      alert("Erro ao processar sua solicitação. Tente novamente.");
     } finally {
       setLoading(false);
     }

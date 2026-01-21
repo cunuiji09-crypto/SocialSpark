@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Sparkles, Info, Trophy, Bookmark } from 'lucide-react';
-import { fetchCuriosities } from '../services/gemini';
-import { Curiosity } from '../types';
+import { fetchCuriosities } from '../services/gemini.ts';
+import { Curiosity } from '../types.ts';
 
 const InspirationFeed: React.FC = () => {
   const [curiosities, setCuriosities] = useState<Curiosity[]>([]);
@@ -14,7 +14,7 @@ const InspirationFeed: React.FC = () => {
         const data = await fetchCuriosities();
         setCuriosities(data);
       } catch (error) {
-        console.error(error);
+        console.error("Erro ao carregar curiosidades:", error);
       } finally {
         setLoading(false);
       }

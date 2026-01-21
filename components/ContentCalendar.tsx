@@ -1,8 +1,8 @@
 
 import React, { useState } from 'react';
 import { Calendar, ChevronLeft, ChevronRight, Plus, Monitor, Instagram, Youtube, FileText, Twitter } from 'lucide-react';
-import { generateWeeklyCalendar } from '../services/gemini';
-import { CalendarDay } from '../types';
+import { generateWeeklyCalendar } from '../services/gemini.ts';
+import { CalendarDay } from '../types.ts';
 
 const ContentCalendar: React.FC = () => {
   const [niche, setNiche] = useState('');
@@ -16,7 +16,8 @@ const ContentCalendar: React.FC = () => {
       const data = await generateWeeklyCalendar(niche);
       setSchedule(data);
     } catch (error) {
-      console.error(error);
+      console.error("Erro ao gerar calendário:", error);
+      alert("Houve um erro ao gerar o calendário. Verifique sua conexão ou tente novamente.");
     } finally {
       setLoading(false);
     }
