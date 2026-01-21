@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Palette, Wand2, Download, RefreshCw, Layers } from 'lucide-react';
+import { Palette, Wand2, Download, RefreshCw, Layers, AlertCircle } from 'lucide-react';
 import { generateNanoBananaTemplate } from '../services/gemini.ts';
 
 const TemplateGenerator: React.FC = () => {
@@ -7,15 +8,19 @@ const TemplateGenerator: React.FC = () => {
   const [platform, setPlatform] = useState('Instagram');
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     if (!prompt) return;
     setLoading(true);
+    setError(null);
+    setImageUrl(null);
     try {
       const url = await generateNanoBananaTemplate(prompt, platform);
       setImageUrl(url);
     } catch (error) {
       console.error(error);
+      setError("Falha ao gerar imagem. Verifique se sua chave de API está correta e tente novamente.");
     } finally {
       setLoading(false);
     }
@@ -70,6 +75,13 @@ const TemplateGenerator: React.FC = () => {
             >
               {loading ? <RefreshCw className="animate-spin" size={20} /> : <><Wand2 size={20} /> Gerar Template Visual</>}
             </button>
+
+            {error && (
+              <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl flex items-center gap-3 text-red-400 text-sm">
+                <AlertCircle size={18} />
+                {error}
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col items-center justify-center bg-slate-900/50 rounded-3xl border border-slate-800 relative min-h-[400px]">

@@ -1,9 +1,8 @@
 
 import { GoogleGenAI, Type } from "@google/genai";
-import { Platform, Style, ContentIdea, CalendarDay } from "../types";
+import { Platform, Style, ContentIdea, CalendarDay } from "../types.ts";
 
 export const generateIdeas = async (niche: string, platform: Platform, style: Style): Promise<ContentIdea[]> => {
-  // Always use process.env.API_KEY directly to ensure the client is properly initialized
   const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
@@ -26,7 +25,8 @@ export const generateIdeas = async (niche: string, platform: Platform, style: St
     },
   });
 
-  return JSON.parse(response.text || "[]");
+  const text = response.text;
+  return JSON.parse(text || "[]");
 };
 
 export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay[]> => {
@@ -51,7 +51,8 @@ export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay
     },
   });
 
-  return JSON.parse(response.text || "[]");
+  const text = response.text;
+  return JSON.parse(text || "[]");
 };
 
 export const generateEngagementTools = async (topic: string): Promise<any> => {
@@ -74,7 +75,8 @@ export const generateEngagementTools = async (topic: string): Promise<any> => {
     },
   });
 
-  return JSON.parse(response.text || "{}");
+  const text = response.text;
+  return JSON.parse(text || "{}");
 };
 
 export const generateNanoBananaTemplate = async (prompt: string, platform: string): Promise<string> => {
@@ -88,19 +90,20 @@ export const generateNanoBananaTemplate = async (prompt: string, platform: strin
     },
     config: {
       imageConfig: {
-        // Fix: Changed "4:5" to "3:4" which is a supported standard value.
-        aspectRatio: platform === 'Instagram' ? "3:4" : platform === 'Blog' ? "16:9" : "9:16",
+        aspectRatio: platform === 'Instagram' ? "1:1" : platform === 'Blog' ? "16:9" : "9:16",
       }
     }
   });
 
-  // Iterating through parts as per guidelines to find the image data.
-  for (const part of response.candidates[0].content.parts) {
-    if (part.inlineData) {
-      return `data:image/png;base64,${part.inlineData.data}`;
+  const candidates = response.candidates;
+  if (candidates && candidates.length > 0) {
+    for (const part of candidates[0].content.parts) {
+      if (part.inlineData) {
+        return `data:image/png;base64,${part.inlineData.data}`;
+      }
     }
   }
-  return "";
+  throw new Error("Não foi possível gerar a imagem.");
 };
 
 export const fetchCuriosities = async (): Promise<any> => {
@@ -124,5 +127,6 @@ export const fetchCuriosities = async (): Promise<any> => {
       },
     },
   });
-  return JSON.parse(response.text || "[]");
+  const text = response.text;
+  return JSON.parse(text || "[]");
 };
