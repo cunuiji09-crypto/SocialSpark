@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { 
   Sparkles, 
@@ -49,7 +48,7 @@ const App: React.FC = () => {
             <Zap className="text-white fill-white" size={24} />
           </div>
           <h1 className="text-xl font-bold tracking-tight">
-            Social<span className="text-purple-400">Spark</span>
+            Social<span className="text-purple-400">Fsk07</span>
           </h1>
         </div>
 
@@ -134,7 +133,7 @@ const NavButton: React.FC<NavButtonProps> = ({ active, onClick, icon, label }) =
 const Dashboard: React.FC<{ onNavigate: (tab: string) => void }> = ({ onNavigate }) => (
   <div className="animate-in fade-in duration-500">
     <header className="mb-12">
-      <h2 className="text-4xl font-extrabold mb-4">Bem-vindo ao <span className="gradient-text">Social Spark</span></h2>
+      <h2 className="text-4xl font-extrabold mb-4">Bem-vindo ao <span className="gradient-text">Social Fsk07</span></h2>
       <p className="text-slate-400 text-lg max-w-2xl">
         Sua central de criatividade movida a IA. Escolha uma ferramenta abaixo para começar a criar seu próximo post viral.
       </p>

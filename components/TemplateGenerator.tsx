@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Palette, Wand2, Download, RefreshCw, Layers } from 'lucide-react';
-import { generateNanoBananaTemplate } from '../services/gemini';
+import { generateNanoBananaTemplate } from '../services/gemini.ts';
 
 const TemplateGenerator: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -79,7 +78,7 @@ const TemplateGenerator: React.FC = () => {
                 <img src={imageUrl} alt="Template" className="max-w-full rounded-2xl shadow-2xl border border-white/10" />
                 <a 
                   href={imageUrl} 
-                  download="social-spark-template.png"
+                  download="social-fsk07-template.png"
                   className="mt-6 flex items-center gap-2 text-pink-400 hover:text-pink-300 font-semibold transition-colors bg-pink-400/10 px-6 py-2 rounded-full border border-pink-400/20"
                 >
                   <Download size={18} /> Baixar Template
