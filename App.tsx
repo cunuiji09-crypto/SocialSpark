@@ -12,11 +12,11 @@ import {
   Plus,
   Rocket
 } from 'lucide-react';
-import IdeaGenerator from './components/IdeaGenerator';
-import TemplateGenerator from './components/TemplateGenerator';
-import EngagementHub from './components/EngagementHub';
-import InspirationFeed from './components/InspirationFeed';
-import ContentCalendar from './components/ContentCalendar';
+import IdeaGenerator from './components/IdeaGenerator.tsx';
+import TemplateGenerator from './components/TemplateGenerator.tsx';
+import EngagementHub from './components/EngagementHub.tsx';
+import InspirationFeed from './components/InspirationFeed.tsx';
+import ContentCalendar from './components/ContentCalendar.tsx';
 
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');

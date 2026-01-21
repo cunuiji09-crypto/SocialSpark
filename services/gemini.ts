@@ -2,10 +2,9 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Platform, Style, ContentIdea, CalendarDay } from "../types";
 
-const API_KEY = process.env.API_KEY || "";
-
 export const generateIdeas = async (niche: string, platform: Platform, style: Style): Promise<ContentIdea[]> => {
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  // Always use process.env.API_KEY directly to ensure the client is properly initialized
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Gere 3 ideias criativas de conteúdo para a plataforma ${platform} no nicho de "${niche}" com o estilo "${style}".`,
@@ -31,7 +30,7 @@ export const generateIdeas = async (niche: string, platform: Platform, style: St
 };
 
 export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay[]> => {
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Crie um calendário de conteúdo de 7 dias para o nicho "${niche}". Alternando entre Instagram, TikTok, YouTube e Blog.`,
@@ -56,7 +55,7 @@ export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay
 };
 
 export const generateEngagementTools = async (topic: string): Promise<any> => {
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: `Gere sugestões de engajamento para o tópico "${topic}": 5 títulos virais, 15 hashtags estratégicas e uma descrição otimizada (copy).`,
@@ -79,7 +78,7 @@ export const generateEngagementTools = async (topic: string): Promise<any> => {
 };
 
 export const generateNanoBananaTemplate = async (prompt: string, platform: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
     contents: {
@@ -89,11 +88,13 @@ export const generateNanoBananaTemplate = async (prompt: string, platform: strin
     },
     config: {
       imageConfig: {
-        aspectRatio: platform === 'Instagram' ? "4:5" : platform === 'Blog' ? "16:9" : "9:16",
+        // Fix: Changed "4:5" to "3:4" which is a supported standard value.
+        aspectRatio: platform === 'Instagram' ? "3:4" : platform === 'Blog' ? "16:9" : "9:16",
       }
     }
   });
 
+  // Iterating through parts as per guidelines to find the image data.
   for (const part of response.candidates[0].content.parts) {
     if (part.inlineData) {
       return `data:image/png;base64,${part.inlineData.data}`;
@@ -103,7 +104,7 @@ export const generateNanoBananaTemplate = async (prompt: string, platform: strin
 };
 
 export const fetchCuriosities = async (): Promise<any> => {
-  const ai = new GoogleGenAI({ apiKey: API_KEY });
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
     contents: "Gere 3 fatos interessantes sobre marketing digital, comportamento de audiência ou branding.",
