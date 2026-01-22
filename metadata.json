@@ -1,5 +1,7 @@
 {
-  "name": "Social Fsk07",
-  "description": "Uma plataforma completa para criadores de conteúdo gerarem ideias virais, templates visuais com o motor Nano Banana e ferramentas de engajamento para múltiplas redes sociais.",
-  "requestFramePermissions": []
+  "name": "Social Spark AI",
+  "description": "Plataforma avançada para criadores de conteúdo com geração de ideias, templates visuais Nano Banana e calendário editorial inteligente.",
+  "requestFramePermissions": [
+    "camera"
+  ]
 }

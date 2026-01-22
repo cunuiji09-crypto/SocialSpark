@@ -2,38 +2,47 @@
 import { GoogleGenAI, Type } from "@google/genai";
 import { Platform, Style, ContentIdea, CalendarDay } from "../types.ts";
 
+// Função auxiliar para obter a instância do AI com a chave mais recente
+const getAI = () => new GoogleGenAI({ apiKey: process.env.API_KEY });
+
 export const generateIdeas = async (niche: string, platform: Platform, style: Style): Promise<ContentIdea[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-  const response = await ai.models.generateContent({
-    model: 'gemini-3-flash-preview',
-    contents: `Gere 3 ideias criativas de conteúdo para a plataforma ${platform} no nicho de "${niche}" com o estilo "${style}".`,
-    config: {
-      responseMimeType: "application/json",
-      responseSchema: {
-        type: Type.ARRAY,
-        items: {
-          type: Type.OBJECT,
-          properties: {
-            title: { type: Type.STRING },
-            hook: { type: Type.STRING },
-            description: { type: Type.STRING },
-            hashtags: { type: Type.ARRAY, items: { type: Type.STRING } },
+  const ai = getAI();
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: `Gere 3 ideias criativas de conteúdo para a plataforma ${platform} no nicho de "${niche}" com o estilo "${style}". Seja inovador e focado em viralização.`,
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              hook: { type: Type.STRING },
+              description: { type: Type.STRING },
+              hashtags: { type: Type.ARRAY, items: { type: Type.STRING } },
+            },
+            required: ["title", "hook", "description", "hashtags"],
           },
-          required: ["title", "hook", "description", "hashtags"],
         },
       },
-    },
-  });
+    });
 
-  const text = response.text;
-  return JSON.parse(text || "[]");
+    return JSON.parse(response.text || "[]");
+  } catch (error: any) {
+    if (error.message?.includes("Requested entity was not found")) {
+       throw new Error("KEY_NOT_FOUND");
+    }
+    throw error;
+  }
 };
 
 export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay[]> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAI();
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Crie um calendário de conteúdo de 7 dias para o nicho "${niche}". Alternando entre Instagram, TikTok, YouTube e Blog.`,
+    contents: `Crie um calendário de conteúdo de 7 dias para o nicho "${niche}". Alternando estrategicamente entre Instagram, TikTok, YouTube e Blog para maximizar o alcance.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -51,15 +60,14 @@ export const generateWeeklyCalendar = async (niche: string): Promise<CalendarDay
     },
   });
 
-  const text = response.text;
-  return JSON.parse(text || "[]");
+  return JSON.parse(response.text || "[]");
 };
 
 export const generateEngagementTools = async (topic: string): Promise<any> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAI();
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: `Gere sugestões de engajamento para o tópico "${topic}": 5 títulos virais, 15 hashtags estratégicas e uma descrição otimizada (copy).`,
+    contents: `Gere estratégias de engajamento de alto nível para o tópico "${topic}": 5 títulos clickbait éticos, 15 hashtags de nicho e uma copy persuasiva otimizada para conversão.`,
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -75,17 +83,16 @@ export const generateEngagementTools = async (topic: string): Promise<any> => {
     },
   });
 
-  const text = response.text;
-  return JSON.parse(text || "{}");
+  return JSON.parse(response.text || "{}");
 };
 
 export const generateNanoBananaTemplate = async (prompt: string, platform: string): Promise<string> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAI();
   const response = await ai.models.generateContent({
     model: 'gemini-2.5-flash-image',
     contents: {
       parts: [
-        { text: `Um template visual moderno e vibrante para ${platform} focado em: ${prompt}. Estilo minimalista, cores neon e espaço para texto.` }
+        { text: `Template visual premium para ${platform}: ${prompt}. Design limpo, estético, com hierarquia visual clara e iluminação dramática.` }
       ]
     },
     config: {
@@ -95,22 +102,19 @@ export const generateNanoBananaTemplate = async (prompt: string, platform: strin
     }
   });
 
-  const candidates = response.candidates;
-  if (candidates && candidates.length > 0) {
-    for (const part of candidates[0].content.parts) {
-      if (part.inlineData) {
-        return `data:image/png;base64,${part.inlineData.data}`;
-      }
+  for (const part of response.candidates?.[0]?.content?.parts || []) {
+    if (part.inlineData) {
+      return `data:image/png;base64,${part.inlineData.data}`;
     }
   }
   throw new Error("Não foi possível gerar a imagem.");
 };
 
 export const fetchCuriosities = async (): Promise<any> => {
-  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  const ai = getAI();
   const response = await ai.models.generateContent({
     model: 'gemini-3-flash-preview',
-    contents: "Gere 3 fatos interessantes sobre marketing digital, comportamento de audiência ou branding.",
+    contents: "Gere 3 insights psicológicos ou tendências atuais sobre marketing digital e criação de conteúdo.",
     config: {
       responseMimeType: "application/json",
       responseSchema: {
@@ -127,6 +131,5 @@ export const fetchCuriosities = async (): Promise<any> => {
       },
     },
   });
-  const text = response.text;
-  return JSON.parse(text || "[]");
+  return JSON.parse(response.text || "[]");
 };
